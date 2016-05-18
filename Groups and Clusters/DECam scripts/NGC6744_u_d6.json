@@ -1,0 +1,38 @@
+[
+ {
+  "count": 1, 
+  "seqtot": 4, 
+  "seqnum": 2, 
+  "expType": "object", 
+  "object": "NGC6744_t5_d6", 
+  "filter": "u", 
+  "seqid": "u_d6", 
+  "RA": "18:56:38.1", 
+  "dec": "-61:24:46.3", 
+  "expTime": 300
+ },
+ {
+  "count": 1, 
+  "seqtot": 4, 
+  "seqnum": 3, 
+  "expType": "object", 
+  "object": "NGC6744_t6_d6", 
+  "filter": "u", 
+  "seqid": "u_d6", 
+  "RA": "18:42:05.9", 
+  "dec": "-62:14:05.3", 
+  "expTime": 300
+ },
+ {
+  "count": 1, 
+  "seqtot": 4, 
+  "seqnum": 4, 
+  "expType": "object", 
+  "object": "NGC6744_t7_d6", 
+  "filter": "u", 
+  "seqid": "u_d6", 
+  "RA": "18:41:16.6", 
+  "dec": "-63:51:33.6", 
+  "expTime": 300
+ }
+]

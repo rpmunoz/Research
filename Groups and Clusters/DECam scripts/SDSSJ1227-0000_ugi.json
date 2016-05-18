@@ -1,0 +1,28 @@
+[
+    {
+        "RA": "12:27:00", 
+        "comment": "Standard Star Field", 
+        "dec": "+00:00:00", 
+        "expType": "object", 
+        "exptime": 30.0, 
+        "filter": "u", 
+        "object": "SDSSJ1227-0000", 
+        "program": "photom-std-field"
+    }, 
+    {
+        "comment": "Standard Star Field", 
+        "expType": "object", 
+        "exptime": 15.0, 
+        "filter": "g", 
+        "object": "SDSSJ1227-0000", 
+        "program": "photom-std-field"
+    }, 
+    {
+        "comment": "Standard Star Field", 
+        "expType": "object", 
+        "exptime": 15.0, 
+        "filter": "i", 
+        "object": "SDSSJ1227-0000", 
+        "program": "photom-std-field"
+    }
+]

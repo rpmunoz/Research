@@ -1,0 +1,26 @@
+[
+ {
+  "count": 1, 
+  "seqtot": 2, 
+  "seqnum": 1, 
+  "expType": "object", 
+  "object": "NGC2997_t4_d5_short", 
+  "filter": "i", 
+  "seqid": "i_d5", 
+  "RA": "9:50:03.1", 
+  "dec": "-31:17:35.9", 
+  "expTime": 30
+ },
+ {
+  "count": 1, 
+  "seqtot": 2, 
+  "seqnum": 2, 
+  "expType": "object", 
+  "object": "NGC2997_t5_d5_short", 
+  "filter": "i", 
+  "seqid": "i_d5", 
+  "RA": "9:43:42.4", 
+  "dec": "-32:25:45.7", 
+  "expTime": 30
+ }
+]

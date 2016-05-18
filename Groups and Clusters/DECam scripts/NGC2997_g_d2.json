@@ -1,0 +1,50 @@
+[
+ {
+  "count": 1, 
+  "seqtot": 4, 
+  "seqnum": 1, 
+  "expType": "object", 
+  "object": "NGC2997_t3_d2_short", 
+  "filter": "g", 
+  "seqid": "g_d2", 
+  "RA": "9:42:14.0", 
+  "dec": "-30:39:12.7", 
+  "expTime": 30
+ },
+ {
+  "count": 1, 
+  "seqtot": 4, 
+  "seqnum": 2, 
+  "expType": "object", 
+  "object": "NGC2997_t3_d2", 
+  "filter": "g", 
+  "seqid": "g_d2", 
+  "RA": "9:42:14.0", 
+  "dec": "-30:39:12.7", 
+  "expTime": 300
+ },
+ {
+  "count": 1, 
+  "seqtot": 4, 
+  "seqnum": 3, 
+  "expType": "object", 
+  "object": "NGC2997_t4_d2", 
+  "filter": "g", 
+  "seqid": "g_d2", 
+  "RA": "9:50:00.8", 
+  "dec": "-31:18:53.2", 
+  "expTime": 300
+ },
+ {
+  "count": 1, 
+  "seqtot": 4, 
+  "seqnum": 4, 
+  "expType": "object", 
+  "object": "NGC2997_t5_d2", 
+  "filter": "g", 
+  "seqid": "g_d2", 
+  "RA": "9:43:40.0", 
+  "dec": "-32:27:03.0", 
+  "expTime": 300
+ }
+]

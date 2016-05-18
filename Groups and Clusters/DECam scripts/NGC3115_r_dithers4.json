@@ -1,0 +1,62 @@
+[
+ {
+  "count": 1, 
+  "seqtot": 5, 
+  "seqnum": 1, 
+  "expType": "object", 
+  "object": "NGC3115_t1_d1_short", 
+  "filter": "r", 
+  "seqid": "r_d1", 
+  "RA": "10:05:12.7", 
+  "dec": "-7:42:28.9", 
+  "expTime": 30
+ },
+ {
+  "count": 1, 
+  "seqtot": 5, 
+  "seqnum": 2, 
+  "expType": "object", 
+  "object": "NGC3115_t1_d1", 
+  "filter": "r", 
+  "seqid": "r_d1", 
+  "RA": "10:05:12.7", 
+  "dec": "-7:42:28.9", 
+  "expTime": 300
+ },
+ {
+  "count": 1, 
+  "seqtot": 5, 
+  "seqnum": 3, 
+  "expType": "object", 
+  "object": "NGC3115_t1_d2", 
+  "filter": "r", 
+  "seqid": "r_d2", 
+  "RA": "10:05:09.7", 
+  "dec": "-7:42:48.2", 
+  "expTime": 300
+ },
+ {
+  "count": 1, 
+  "seqtot": 5, 
+  "seqnum": 4, 
+  "expType": "object", 
+  "object": "NGC3115_t1_d3", 
+  "filter": "r", 
+  "seqid": "r_d3", 
+  "RA": "10:05:13.7", 
+  "dec": "-7:43:26.9", 
+  "expTime": 300
+ },
+ {
+  "count": 1, 
+  "seqtot": 5, 
+  "seqnum": 5, 
+  "expType": "object", 
+  "object": "NGC3115_t1_d4", 
+  "filter": "r", 
+  "seqid": "r_d4", 
+  "RA": "10:05:15.7", 
+  "dec": "-7:42:09.6", 
+  "expTime": 300
+ }
+]

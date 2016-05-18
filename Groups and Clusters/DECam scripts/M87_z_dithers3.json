@@ -1,0 +1,38 @@
+[
+ {
+  "count": 1, 
+  "seqtot": 3, 
+  "seqnum": 1, 
+  "expType": "object", 
+  "object": "M87_t1_d1", 
+  "filter": "z", 
+  "seqid": "z_d1", 
+  "RA": "12:30:50.0", 
+  "dec": "12:18:40.0", 
+  "expTime": 90
+ },
+ {
+  "count": 1, 
+  "seqtot": 3, 
+  "seqnum": 2, 
+  "expType": "object", 
+  "object": "M87_t1_d2", 
+  "filter": "z", 
+  "seqid": "z_d2", 
+  "RA": "12:30:46.9", 
+  "dec": "12:18:20.7", 
+  "expTime": 90
+ },
+ {
+  "count": 1, 
+  "seqtot": 3, 
+  "seqnum": 3, 
+  "expType": "object", 
+  "object": "M87_t1_d3", 
+  "filter": "z", 
+  "seqid": "z_d3", 
+  "RA": "12:30:51.0", 
+  "dec": "12:17:42.0", 
+  "expTime": 90
+ }
+]
