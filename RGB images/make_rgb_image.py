@@ -35,7 +35,8 @@ def main(argv):
 	print 'Prefix path is "', prefix
 	print 'Configuration file is "', config_file
 
-	config_data = np.loadtxt(config_file, dtype={'names': ('gender', 'age', 'weight'), 'formats': ('S1', 'i4', 'f4')})
+	config_data = np.loadtxt(config_file, dtype={'names': ('tile', 'filter', 'image', 'weight'), 'formats': ('S10', 'S10', 'S30', 'S30')})
+	print config_data
 	sys.exit()
 
 	stack_dir='/Volumes/Q6/NGFS/DECam/stacks'
