@@ -35,7 +35,7 @@ def main(argv):
 	print 'Prefix path is "', prefix
 	print 'Configuration file is "', config_file
 
-	config_data = np.loadtxt(config_file, dtype={'names': ('tile', 'filter', 'image', 'weight'), 'formats': ('S10', 'S10', 'S30', 'S30')})
+	config_data = np.loadtxt(config_file, dtype={'names': ('tile', 'filter', 'image', 'weight'), 'formats': ('S10', 'S10', 'S50', 'S50')})
 	print config_data
 	sys.exit()
 
