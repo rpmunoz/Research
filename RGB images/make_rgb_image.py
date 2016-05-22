@@ -218,7 +218,7 @@ def main(argv):
 							plt.xlabel('Flux')
 							plt.ylabel('Number count')
 			
-							if stack_filter[j]=='i':
+							if stack_filter[j]==stack_filter_ref:
 								hist, bin_edges = np.histogram( im_data, bins=np.linspace(stack_rgb_limit[j,0], stack_rgb_limit[j,1], hist_nbin), range=stack_rgb_limit[j,:] )
 								stack_rgb_ratio_ref= [ hist[0]*1./np.amax(hist), hist[-1]*1./np.amax(hist) ]
 								gv_max=np.argmax(hist)
