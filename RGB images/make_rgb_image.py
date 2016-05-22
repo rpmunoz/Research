@@ -54,6 +54,8 @@ def main(argv):
 		stack_im_file=[prefix+'/'+config_data['image'][np.where( (config_data['tile'] == stack_tile[i]) & (config_data['filter'] == f) )][0] for f in filters]
 		stack_weight_file=[prefix+'/'+config_data['weight'][np.where( (config_data['tile'] == stack_tile[i]) & (config_data['filter'] == f) )][0] for f in filters]
 		stack_rgb_file=prefix+'/'+stack_name+'_TILE'+stack_tile[i]+'_FILTERS'+string.join(filters,'')+'.fits'
+		stack_hist_sky_file=prefix+'/'+stack_name+'_TILE'+stack_tile[i]+'_FILTERS'+string.join(filters,'')+'_histogram_sky_v'+stack_version+'.pdf'
+		stack_hist_file=prefix+'/'+stack_name+'_TILE'+stack_tile[i]+'_FILTERS'+string.join(filters,'')+'_histogram_v'+stack_version+'.pdf'
 		stack_rgb_limit=np.zeros((3,2), dtype=np.float32)
 
 		hist_nbin=200
@@ -140,7 +142,7 @@ def main(argv):
 							plt.ticklabel_format(style='sci', axis='x', scilimits=(0,0))
 							plt.xlabel('Flux')
 							plt.ylabel('Number count')
-							plt.savefig(stack_dir+'/ngfs_tile'+stack_tile_ref+'_histogram_sky.pdf')
+							plt.savefig(stack_hist_sky_file)
 
 							weight_file=stack_weight_file[0]
 							print 'Reading weight file ', weight_file
@@ -303,7 +305,7 @@ def main(argv):
 			pyfits.writeto(stack_rgb_file, im_data_cube, header=im_h_cube, clobber=True)
 		
 			plt.tight_layout()
-			plt.savefig(stack_dir+'/ngfs_tile'+stack_tile[i]+'_histogram_v'+stack_version+'.pdf')
+			plt.savefig(stack_hist_file)
 			plt.close(fig)
 		
 			print "stack_rgb_limit: \n", stack_rgb_limit
