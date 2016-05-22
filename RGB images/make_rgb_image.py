@@ -41,26 +41,11 @@ def main(argv):
 	print 'Configuration file is "', config_file
 
 	config_data = np.loadtxt(config_file, dtype={'names': ('tile', 'filter', 'image', 'weight'), 'formats': ('S10', 'S10', 'S50', 'S50')})
-#	gv_sort=np.argsort(config_data['filter'])[::-1]
-#	config_data=config_data[gv_sort]
-#	print config_data
 
 	tile_uniq=np.unique(config_data['tile'])
 	filter_uniq=np.unique(config_data['filter'])
-
-	print tile_uniq
-	print filter_uniq
-
-	# stack_dir='/Volumes/Q6/NGFS/DECam/stacks'
-	# stack_tile=['1','4'] #,'2','3','4','5','6','7','10','13']
-	# stack_tile_ref='1'
-	# stack_filter=['i','g','u']
-	# stack_filter_ref='i'
-	# stack_version='4'
-
-	# stack_im_file=['ss_fornax_tileX_i_long.003.fits','ss_fornax_tileX_g_long_ALIGNi.003.fits','ss_fornax_tileX_u_long_ALIGNi.003.fits']
-	# stack_weight_file=['ss_fornax_tileX_i_long.003.WEIGHT.fits','ss_fornax_tileX_g_long_ALIGNi.003.WEIGHT.fits','ss_fornax_tileX_u_long_ALIGNi.003.WEIGHT.fits']
-	# stack_mask_file=['ss_fornax_tileX_i_long.003.MASK.fits','ss_fornax_tileX_g_long_ALIGNi.003.MASK.fits','ss_fornax_tileX_u_long_ALIGNi.003.MASK.fits']
+	print "List of tiles: ", tile_uniq
+	print "List of filters: ", filter_uniq
 
 	for i in range(len(tile_uniq)):
 
@@ -69,39 +54,6 @@ def main(argv):
 		stack_rgb_file=prefix+'/'+stack_name+'_TILE'+tile_uniq[i]+'_FILTERS'+string.join(filters,'')+'.fits'
 		stack_rgb_limit=np.zeros((3,2), dtype=np.float32)
 		stack_filter=filters
-		#gv1=np.where( (config_data['tile'] == tile_uniq[i]) & (config_data['filter'] == filters[0]) )
-		#gv1=np.where( (config_data['tile'] == tile_uniq[i]) & (config_data['filter'] == filters[0]) )
-		 # & ( (config_data['filter'] == filters[0]) | (config_data['filter'] == filters[1]) | (config_data['filter'] == filters[2]) ) )
-		#gv_sort=np.argsort(config_data[gv_tile]['filter'])[::-1]
-
-		#im_file=  config_data['image'][gv_tile][np.where( (config_data['filter'][gv_tile] == filters[i]) )] for i in range(len(filters))
-		#print im_file
-
-		#stack_im_file=   [prefix+im_file for im_file in config_data[gv]]
-		#stack_weight_file=stack_weight_file_full[i]
-		#stack_mask_file=stack_mask_file_full[i]
-		#stack_rgb_file=stack_rgb_file_full[i]
-		#stack_rgb_limit=np.zeros((3,2), dtype=np.float32)
-
-	# stack_im_file_full = [[prefix+'/'+im_file.replace('tileX','tile'+im_tile) for im_file in stack_im_file] for im_tile in stack_tile]
-	# stack_weight_file_full = [[prefix+'/'+im_file.replace('tileX','tile'+im_tile) for im_file in stack_weight_file] for im_tile in stack_tile]
-	# stack_mask_file_full = [[prefix+'/'+im_file.replace('tileX','tile'+im_tile) for im_file in stack_mask_file] for im_tile in stack_tile]
-	# stack_rgb_file_full=[prefix+'/ngfs_tile'+im_tile+'_rgb.fits' for im_tile in stack_tile]
-
-	# for i in range(len(stack_im_file_full)):
-
-	# 	stack_im_file=stack_im_file_full[i]
-	# 	stack_weight_file=stack_weight_file_full[i]
-	# 	stack_mask_file=stack_mask_file_full[i]
-	# 	stack_rgb_file=stack_rgb_file_full[i]
-	# 	stack_rgb_limit=np.zeros((3,2), dtype=np.float32)
-
-	#	if not ( (im_tile=='1') | (im_tile=='4') ):
-	#		stack_im_file=stack_im_file[0:2]
-	#		stack_weight_file=stack_weight_file[0:2]
-	#		stack_filter=['i','g+i','g']
-	#	else:
-	#		stack_filter=stack_filter_orig
 		
 		hist_nbin=200
 		hist_percentile=[0.25,99.5] #[0.25,99.8] #[0.25,99.5]  #([0.25,99.5],[0.25,99.55],[0.22,99.8])
@@ -113,11 +65,7 @@ def main(argv):
 		nx = int(im_h['NAXIS1'])
 		ny = int(im_h['NAXIS2'])
 		im_data_cube = np.zeros((3, ny, nx), dtype=np.float32)
-		
-	#	for f in stack_im_file:
-	#		if not os.path.exists(f):
-	#			raise Exception("File does not exist : " + f)
-		
+			
 		if not os.path.exists(stack_rgb_file):
 		
 			print '\nCreating rgb cube ', stack_rgb_file
@@ -362,24 +310,6 @@ def main(argv):
 			im_rgb_file=stack_rgb_file.replace('.fits','_asinh_v'+stack_version+'.jpg')
 			print 'Creating RGB image file ', im_rgb_file
 			aplpy.make_rgb_image(stack_rgb_file, im_rgb_file, stretch_r='arcsinh', stretch_g='arcsinh', stretch_b='arcsinh', vmin_r=stack_rgb_limit[0,0], vmin_g=stack_rgb_limit[1,0], vmin_b=stack_rgb_limit[2,0], vmax_r=stack_rgb_limit[0,1], vmax_g=stack_rgb_limit[1,1], vmax_b=stack_rgb_limit[2,1], vmid_r=-0.07, vmid_g=-0.07, vmid_b=-0.07, make_nans_transparent=True, embed_avm_tags=True)
-
-	#		im=io.imread(im_rgb_file)
-	#		exposure.rescale_intensity(im, out_range=(30, 255))
-	#		io.imsave(im_rgb_file.replace('.jpg','_rescale.jpg'), im)
-
-	#		im=Image.open(im_rgb_file)
-	#		enh = ImageEnhance.Contrast(im)
-	#		im = enh.enhance(1.6)
-	#		enh = ImageEnhance.Brightness(im)
-	#		im = enh.enhance(0.8)
-	#		im_rgb_file=stack_rgb_file.replace('.fits','_asinh_v1_enh.jpg')
-	#		im.save(im_rgb_file.replace('.jpg','_brightness.jpg'), "JPEG", quality=90, optimize=True, progressive=True)
-
-	#		im_rgb_file=stack_rgb_file.replace('.fits','_linear_v'+stack_version+'.jpg')
-	#		print 'Creating RGB image file ', im_rgb_file
-	#		aplpy.make_rgb_image(stack_rgb_file, im_rgb_file, stretch_r='linear', stretch_g='linear', stretch_b='linear', vmin_r=stack_rgb_limit[0,0], vmin_g=stack_rgb_limit[1,0], vmin_b=stack_rgb_limit[2,0], vmax_r=stack_rgb_limit[0,1], vmax_g=stack_rgb_limit[1,1], vmax_b=stack_rgb_limit[2,1], make_nans_transparent=True, embed_avm_tags=True)
-
-			
 
 
 if __name__ == "__main__":
