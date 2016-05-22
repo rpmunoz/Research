@@ -175,7 +175,7 @@ def main(argv):
 			try:
 				stack_rgb_limit=stack_rgb_limit_ref
 			except:	
-				print '\nComputing the RGB limits using the actual image'
+				print '\nComputing the RGB limits using the current image'
 
 				w, h = 2*matplotlib.figure.figaspect(1.2)
 				fig = plt.figure(figsize=(w,h))
