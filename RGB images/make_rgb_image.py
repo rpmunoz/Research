@@ -126,7 +126,7 @@ def main(argv):
 				print '\nProcessing image ', stack_im_file[j], ' - filter ', stack_filter[j]
 				im_file=stack_im_file[j]
 				weight_file=stack_weight_file[j]
-				mask_file=stack_mask_file[j]
+				#mask_file=stack_mask_file[j]
 			
 				if os.path.exists(im_file):
 					print '\nReading image file ', im_file
