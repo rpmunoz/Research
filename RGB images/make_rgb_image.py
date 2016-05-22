@@ -20,6 +20,8 @@ def main(argv):
 	filters=('z','g','u')
 	stack_name='scabs'
 	stack_version='1'
+	stack_tile_ref='1'
+	stack_filter_ref='z'
 
 	try:
 		opts, args = getopt.getopt(argv,"hp:c:f:",["prefix=","config=","filters="])
@@ -42,19 +44,18 @@ def main(argv):
 
 	config_data = np.loadtxt(config_file, dtype={'names': ('tile', 'filter', 'image', 'weight'), 'formats': ('S10', 'S10', 'S50', 'S50')})
 
-	tile_uniq=np.unique(config_data['tile'])
-	filter_uniq=np.unique(config_data['filter'])
-	print "List of tiles: ", tile_uniq
-	print "List of filters: ", filter_uniq
+	stack_tile=np.unique(config_data['tile'])
+	stack_filter=filters
+	print "List of tiles: ", stack_tile
+	print "List of filters: ", stack_filter
 
-	for i in range(len(tile_uniq)):
+	for i in range(len(stack_tile)):
 
-		stack_im_file=[prefix+'/'+config_data['image'][np.where( (config_data['tile'] == tile_uniq[i]) & (config_data['filter'] == f) )][0] for f in filters]
-		stack_weight_file=[prefix+'/'+config_data['weight'][np.where( (config_data['tile'] == tile_uniq[i]) & (config_data['filter'] == f) )][0] for f in filters]
-		stack_rgb_file=prefix+'/'+stack_name+'_TILE'+tile_uniq[i]+'_FILTERS'+string.join(filters,'')+'.fits'
+		stack_im_file=[prefix+'/'+config_data['image'][np.where( (config_data['tile'] == stack_tile[i]) & (config_data['filter'] == f) )][0] for f in filters]
+		stack_weight_file=[prefix+'/'+config_data['weight'][np.where( (config_data['tile'] == stack_tile[i]) & (config_data['filter'] == f) )][0] for f in filters]
+		stack_rgb_file=prefix+'/'+stack_name+'_TILE'+stack_tile[i]+'_FILTERS'+string.join(filters,'')+'.fits'
 		stack_rgb_limit=np.zeros((3,2), dtype=np.float32)
-		stack_filter=filters
-		
+
 		hist_nbin=200
 		hist_percentile=[0.25,99.5] #[0.25,99.8] #[0.25,99.5]  #([0.25,99.5],[0.25,99.55],[0.22,99.8])
 		
