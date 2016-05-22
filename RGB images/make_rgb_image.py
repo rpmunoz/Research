@@ -68,10 +68,7 @@ def main(argv):
 		stack_weight_file=[prefix+'/'+config_data['weight'][np.where( (config_data['tile'] == tile_uniq[i]) & (config_data['filter'] == f) )][0] for f in filters]
 		stack_rgb_file=prefix+'/'+stack_name+'_TILE'+tile_uniq[i]+'_FILTERS'+string.join(filters,'')+'.fits'
 		stack_rgb_limit=np.zeros((3,2), dtype=np.float32)
-		print stack_im_file
-		print stack_weight_file
-		print stack_rgb_file
-		print stack_rgb_limit
+		stack_filter=filters
 		#gv1=np.where( (config_data['tile'] == tile_uniq[i]) & (config_data['filter'] == filters[0]) )
 		#gv1=np.where( (config_data['tile'] == tile_uniq[i]) & (config_data['filter'] == filters[0]) )
 		 # & ( (config_data['filter'] == filters[0]) | (config_data['filter'] == filters[1]) | (config_data['filter'] == filters[2]) ) )
