@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import sys, os, getopt
+import sys, os, getopt, string
 import pyfits
 import astropy
 import aplpy
@@ -17,51 +17,87 @@ def main(argv):
 
 	prefix=''
 	config_file=''
+	filters=('z','g','u')
+	stack_name='scabs'
+	stack_version='1'
 
 	try:
-		opts, args = getopt.getopt(argv,"hp:c:",["prefix=","config="])
+		opts, args = getopt.getopt(argv,"hp:c:f:",["prefix=","config=","filters="])
 	except getopt.GetoptError:
-		print 'make_rgb_image.py -p <prefix> -c <configuration_file>'
+		print 'make_rgb_image.py -p <prefix> -c <configuration_file> -f <filters>'
 		sys.exit(2)
 	for opt, arg in opts:
 		if opt == '-h':
-			print 'make_rgb_image.py -p <prefix> -c <configuration_file>'
+			print 'make_rgb_image.py -p <prefix> -c <configuration_file> -f <filters>'
 			sys.exit()
 		elif opt in ("-p", "--prefix"):
 			prefix = arg
 		elif opt in ("-c", "--config"):
 			config_file = arg
+		elif opt in ("-f", "--filters"):
+			filters = string.split(arg,',')
 
 	print 'Prefix path is "', prefix
 	print 'Configuration file is "', config_file
 
 	config_data = np.loadtxt(config_file, dtype={'names': ('tile', 'filter', 'image', 'weight'), 'formats': ('S10', 'S10', 'S50', 'S50')})
-	print config_data
-	sys.exit()
+#	gv_sort=np.argsort(config_data['filter'])[::-1]
+#	config_data=config_data[gv_sort]
+#	print config_data
 
-	stack_dir='/Volumes/Q6/NGFS/DECam/stacks'
-	stack_tile=['1','4'] #,'2','3','4','5','6','7','10','13']
-	stack_tile_ref='1'
-	stack_filter=['i','g','u']
-	stack_filter_ref='i'
-	stack_version='4'
+	tile_uniq=np.unique(config_data['tile'])
+	filter_uniq=np.unique(config_data['filter'])
 
-	stack_im_file=['ss_fornax_tileX_i_long.003.fits','ss_fornax_tileX_g_long_ALIGNi.003.fits','ss_fornax_tileX_u_long_ALIGNi.003.fits']
-	stack_weight_file=['ss_fornax_tileX_i_long.003.WEIGHT.fits','ss_fornax_tileX_g_long_ALIGNi.003.WEIGHT.fits','ss_fornax_tileX_u_long_ALIGNi.003.WEIGHT.fits']
-	stack_mask_file=['ss_fornax_tileX_i_long.003.MASK.fits','ss_fornax_tileX_g_long_ALIGNi.003.MASK.fits','ss_fornax_tileX_u_long_ALIGNi.003.MASK.fits']
+	print tile_uniq
+	print filter_uniq
 
-	stack_im_file_full = [[stack_dir+'/'+im_file.replace('tileX','tile'+im_tile) for im_file in stack_im_file] for im_tile in stack_tile]
-	stack_weight_file_full = [[stack_dir+'/'+im_file.replace('tileX','tile'+im_tile) for im_file in stack_weight_file] for im_tile in stack_tile]
-	stack_mask_file_full = [[stack_dir+'/'+im_file.replace('tileX','tile'+im_tile) for im_file in stack_mask_file] for im_tile in stack_tile]
-	stack_rgb_file_full=[stack_dir+'/ngfs_tile'+im_tile+'_rgb.fits' for im_tile in stack_tile]
+	# stack_dir='/Volumes/Q6/NGFS/DECam/stacks'
+	# stack_tile=['1','4'] #,'2','3','4','5','6','7','10','13']
+	# stack_tile_ref='1'
+	# stack_filter=['i','g','u']
+	# stack_filter_ref='i'
+	# stack_version='4'
 
-	for i in range(len(stack_im_file_full)):
+	# stack_im_file=['ss_fornax_tileX_i_long.003.fits','ss_fornax_tileX_g_long_ALIGNi.003.fits','ss_fornax_tileX_u_long_ALIGNi.003.fits']
+	# stack_weight_file=['ss_fornax_tileX_i_long.003.WEIGHT.fits','ss_fornax_tileX_g_long_ALIGNi.003.WEIGHT.fits','ss_fornax_tileX_u_long_ALIGNi.003.WEIGHT.fits']
+	# stack_mask_file=['ss_fornax_tileX_i_long.003.MASK.fits','ss_fornax_tileX_g_long_ALIGNi.003.MASK.fits','ss_fornax_tileX_u_long_ALIGNi.003.MASK.fits']
 
-		stack_im_file=stack_im_file_full[i]
-		stack_weight_file=stack_weight_file_full[i]
-		stack_mask_file=stack_mask_file_full[i]
-		stack_rgb_file=stack_rgb_file_full[i]
+	for i in range(len(tile_uniq)):
+
+		stack_im_file=[prefix+'/'+config_data['image'][np.where( (config_data['tile'] == tile_uniq[i]) & (config_data['filter'] == f) )][0] for f in filters]
+		stack_weight_file=[prefix+'/'+config_data['weight'][np.where( (config_data['tile'] == tile_uniq[i]) & (config_data['filter'] == f) )][0] for f in filters]
+		stack_rgb_file=prefix+'/'+stack_name+'_TILE'+tile_uniq[i]+'_FILTERS'+string.join(filters,'')+'.fits'
 		stack_rgb_limit=np.zeros((3,2), dtype=np.float32)
+		print stack_im_file
+		print stack_weight_file
+		print stack_rgb_file
+		print stack_rgb_limit
+		#gv1=np.where( (config_data['tile'] == tile_uniq[i]) & (config_data['filter'] == filters[0]) )
+		#gv1=np.where( (config_data['tile'] == tile_uniq[i]) & (config_data['filter'] == filters[0]) )
+		 # & ( (config_data['filter'] == filters[0]) | (config_data['filter'] == filters[1]) | (config_data['filter'] == filters[2]) ) )
+		#gv_sort=np.argsort(config_data[gv_tile]['filter'])[::-1]
+
+		#im_file=  config_data['image'][gv_tile][np.where( (config_data['filter'][gv_tile] == filters[i]) )] for i in range(len(filters))
+		#print im_file
+
+		#stack_im_file=   [prefix+im_file for im_file in config_data[gv]]
+		#stack_weight_file=stack_weight_file_full[i]
+		#stack_mask_file=stack_mask_file_full[i]
+		#stack_rgb_file=stack_rgb_file_full[i]
+		#stack_rgb_limit=np.zeros((3,2), dtype=np.float32)
+
+	# stack_im_file_full = [[prefix+'/'+im_file.replace('tileX','tile'+im_tile) for im_file in stack_im_file] for im_tile in stack_tile]
+	# stack_weight_file_full = [[prefix+'/'+im_file.replace('tileX','tile'+im_tile) for im_file in stack_weight_file] for im_tile in stack_tile]
+	# stack_mask_file_full = [[prefix+'/'+im_file.replace('tileX','tile'+im_tile) for im_file in stack_mask_file] for im_tile in stack_tile]
+	# stack_rgb_file_full=[prefix+'/ngfs_tile'+im_tile+'_rgb.fits' for im_tile in stack_tile]
+
+	# for i in range(len(stack_im_file_full)):
+
+	# 	stack_im_file=stack_im_file_full[i]
+	# 	stack_weight_file=stack_weight_file_full[i]
+	# 	stack_mask_file=stack_mask_file_full[i]
+	# 	stack_rgb_file=stack_rgb_file_full[i]
+	# 	stack_rgb_limit=np.zeros((3,2), dtype=np.float32)
 
 	#	if not ( (im_tile=='1') | (im_tile=='4') ):
 	#		stack_im_file=stack_im_file[0:2]
@@ -347,15 +383,6 @@ def main(argv):
 	#		aplpy.make_rgb_image(stack_rgb_file, im_rgb_file, stretch_r='linear', stretch_g='linear', stretch_b='linear', vmin_r=stack_rgb_limit[0,0], vmin_g=stack_rgb_limit[1,0], vmin_b=stack_rgb_limit[2,0], vmax_r=stack_rgb_limit[0,1], vmax_g=stack_rgb_limit[1,1], vmax_b=stack_rgb_limit[2,1], make_nans_transparent=True, embed_avm_tags=True)
 
 			
-
-	sys.exit()
-
-	aplpy.make_rgb_image(stack_rgb_file, stack_rgb_file.replace('.fits','_v1.jpg'), stretch_r='arcsinh', stretch_g='arcsinh', stretch_b='arcsinh', pmin_r=0.25, pmin_g=0.25, pmin_b=0.25, pmax_r=99.75, pmax_g=99.75, pmax_b=99.75, make_nans_transparent=True, embed_avm_tags=True)
-	aplpy.make_rgb_image(stack_rgb_file, stack_rgb_file.replace('.fits','_v2.jpg'), stretch_r='arcsinh', stretch_g='arcsinh', stretch_b='arcsinh', pmin_r=0.25, pmin_g=0.25, pmin_b=0.25, pmax_r=85., pmax_g=85., pmax_b=85., make_nans_transparent=True, embed_avm_tags=True)
-	aplpy.make_rgb_image(stack_rgb_file, stack_rgb_file.replace('.fits','_v3.jpg'), stretch_r='arcsinh', stretch_g='arcsinh', stretch_b='arcsinh', pmin_r=10., pmin_g=10., pmin_b=10., pmax_r=99.75, pmax_g=99.75, pmax_b=99.75, make_nans_transparent=True, embed_avm_tags=True)
-	aplpy.make_rgb_image(stack_rgb_file, stack_rgb_file.replace('.fits','_v4.jpg'), stretch_r='arcsinh', stretch_g='arcsinh', stretch_b='arcsinh', pmin_r=10., pmin_g=10., pmin_b=10., pmax_r=85., pmax_g=85., pmax_b=85., make_nans_transparent=True, embed_avm_tags=True)
-	aplpy.make_rgb_image(stack_rgb_file, stack_rgb_file.replace('.fits','_v5.jpg'), stretch_r='arcsinh', stretch_g='arcsinh', stretch_b='arcsinh', pmin_r=5., pmin_g=5., pmin_b=5., pmax_r=85., pmax_g=85., pmax_b=85., make_nans_transparent=True, embed_avm_tags=True)
-	aplpy.make_rgb_image(stack_rgb_file, stack_rgb_file.replace('.fits','_v6.jpg'), stretch_r='arcsinh', stretch_g='arcsinh', stretch_b='arcsinh', pmin_r=0.25, pmin_g=0.25, pmin_b=0.25, pmax_r=99.75, pmax_g=99.75, pmax_b=99.75, make_nans_transparent=True, embed_avm_tags=True)
 
 
 if __name__ == "__main__":
