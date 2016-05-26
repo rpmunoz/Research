@@ -1,58 +1,70 @@
 #!/usr/bin/python
 
-import sys, os, getopt, string
+import sys, os, getopt, string, ConfigParser
 import pyfits
 import astropy
 import aplpy
 import numpy as np
 import matplotlib
-#matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import skimage.io as io
 from skimage import exposure
-from PIL import Image
-from PIL import ImageEnhance
+
+class ArgumentError(Exception):
+    pass
 
 def main(argv):
-
-	prefix=''
-	config_file=''
-	filters=('z','g','u')
-	stack_name='scabs'
-	stack_version='1'
-	stack_tile_ref='1'
-	stack_filter_ref='z'
+	
+	config_file=None
+	list_file=None
 
 	try:
-		opts, args = getopt.getopt(argv,"hp:c:f:",["prefix=","config=","filters="])
+		opts, args = getopt.getopt(argv,"hc:l:p:f:",["config=","list=","prefix=","filters="])
 	except getopt.GetoptError:
-		print 'make_rgb_image.py -p <prefix> -c <configuration_file> -f <filters>'
+		print 'make_rgb_image.py -c <configuration file> -l <image file list> -p <prefix> -f <filters>'
 		sys.exit(2)
+
 	for opt, arg in opts:
 		if opt == '-h':
-			print 'make_rgb_image.py -p <prefix> -c <configuration_file> -f <filters>'
+			print 'make_rgb_image.py -c <configuration file> -l <image file list> -p <prefix> -f <filters>'
 			sys.exit()
-		elif opt in ("-p", "--prefix"):
-			prefix = arg
 		elif opt in ("-c", "--config"):
 			config_file = arg
+		elif opt in ("-l", "--list"):
+			list_file = arg
+		elif opt in ("-p", "--prefix"):
+			prefix = arg
 		elif opt in ("-f", "--filters"):
 			filters = string.split(arg,',')
 
-	print 'Prefix path is "', prefix
-	print 'Configuration file is "', config_file
+	if config_file is None or list_file is None:
+		raise ArgumentError("You need to supply a configuration file and an image file list")
 
-	config_data = np.loadtxt(config_file, dtype={'names': ('tile', 'filter', 'image', 'weight'), 'formats': ('S10', 'S10', 'S50', 'S50')})
+	print 'Configuration file is ', config_file
+	print 'Image file list is ', list_file
 
-	stack_tile=np.unique(config_data['tile'])
+	config_data = ConfigParser.ConfigParser()
+	config_data.read(config_file)
+
+	prefix=config_data.get('Stack','prefix')
+	filters=string.split(config_data.get('Stack','filters'),',')
+	stack_name=config_data.get('Stack','stack_name')
+	stack_version=config_data.get('Stack','stack_version')
+	stack_tile_ref=config_data.get('Stack','stack_tile_ref')
+	stack_filter_ref=config_data.get('Stack','stack_filter_ref')
+
+	list_data = np.loadtxt(list_file, dtype={'names': ('tile', 'filter', 'image', 'weight'), 'formats': ('S10', 'S10', 'S50', 'S50')})
+
+	stack_tile=np.unique(list_data['tile'])
 	stack_filter=filters
 	print "List of tiles: ", stack_tile
 	print "List of filters: ", stack_filter
 
 	for i in range(len(stack_tile)):
+		print '\nProcessing tile ', stack_tile[i]
 
-		stack_im_file=[prefix+'/'+config_data['image'][np.where( (config_data['tile'] == stack_tile[i]) & (config_data['filter'] == f) )][0] for f in filters]
-		stack_weight_file=[prefix+'/'+config_data['weight'][np.where( (config_data['tile'] == stack_tile[i]) & (config_data['filter'] == f) )][0] for f in filters]
+		stack_im_file=[prefix+'/'+list_data['image'][np.where( (list_data['tile'] == stack_tile[i]) & (list_data['filter'] == f) )][0] for f in filters]
+		stack_weight_file=[prefix+'/'+list_data['weight'][np.where( (list_data['tile'] == stack_tile[i]) & (list_data['filter'] == f) )][0] for f in filters]
 		stack_rgb_file=prefix+'/'+stack_name+'_TILE'+stack_tile[i]+'_FILTERS'+string.join(filters,'')+'.fits'
 		stack_hist_sky_file=prefix+'/'+stack_name+'_TILE'+stack_tile[i]+'_FILTERS'+string.join(filters,'')+'_histogram_sky_v'+stack_version+'.pdf'
 		stack_hist_file=prefix+'/'+stack_name+'_TILE'+stack_tile[i]+'_FILTERS'+string.join(filters,'')+'_histogram_v'+stack_version+'.pdf'
@@ -163,6 +175,8 @@ def main(argv):
 			
 			print 'Saving the rgb cube file ', stack_rgb_file
 			pyfits.writeto(stack_rgb_file, im_data_cube, header=im_h)
+		else:
+			print 'RGB cube already exists'
 		
 
 		im_rgb_file=stack_rgb_file.replace('.fits','_asinh_v'+stack_version+'.jpg')
@@ -313,7 +327,8 @@ def main(argv):
 			im_rgb_file=stack_rgb_file.replace('.fits','_asinh_v'+stack_version+'.jpg')
 			print 'Creating RGB image file ', im_rgb_file
 			aplpy.make_rgb_image(stack_rgb_file, im_rgb_file, stretch_r='arcsinh', stretch_g='arcsinh', stretch_b='arcsinh', vmin_r=stack_rgb_limit[0,0], vmin_g=stack_rgb_limit[1,0], vmin_b=stack_rgb_limit[2,0], vmax_r=stack_rgb_limit[0,1], vmax_g=stack_rgb_limit[1,1], vmax_b=stack_rgb_limit[2,1], vmid_r=-0.07, vmid_g=-0.07, vmid_b=-0.07, make_nans_transparent=True, embed_avm_tags=True)
-
+		else:
+			print 'RGB image already exists'
 
 if __name__ == "__main__":
    main(sys.argv[1:])
